@@ -15,6 +15,7 @@ python 3.5+
 python3 train.py
 parameter
     --train True/False help = "specify whether train the model or not (default: False)"
+    --train_cluster' True/False help="specify whether train the cluster model or not (default: False)"
     --model_dir help = "Directory containing params.json (default: local directory)"
     --resume help = 'resume from latest checkpoint (default: True)'
     --network help='select network to train on. leave it blank means train on all model'
