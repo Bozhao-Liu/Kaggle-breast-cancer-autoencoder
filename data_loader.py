@@ -24,7 +24,7 @@ class DatasetWrapper:
 			assert cv_iters > 2, 'Cross validation folds must be more than 2 folds'
 			self.cv_iters = cv_iters
 			datapath = './Data'
-			self.dataset = [os.path.join(os.path.join(os.path.join(datapath, folder), label), image) 
+			self.dataset = [[os.path.join(os.path.join(os.path.join(datapath, folder), label), image), label] 
 						for folder in os.listdir(datapath)
 							for label in os.listdir(os.path.join(datapath, folder)) 
 								for image in os.listdir(os.path.join(os.path.join(datapath, folder), label))]
@@ -92,7 +92,7 @@ class DatasetWrapper:
 		Returns:
 			features in list	
 		"""
-		return DatasetWrapper.instance.dataset[key]
+		return DatasetWrapper.instance.dataset[key][0]
 
 	def label(self, key):
 		"""
@@ -101,7 +101,7 @@ class DatasetWrapper:
 		Returns:
 			label to number 8 or other
 		"""
-		return DatasetWrapper.instance.dataset[key]
+		return DatasetWrapper.instance.dataset[key][1]
 
 	def next(self):
 		DatasetWrapper.instance.next()

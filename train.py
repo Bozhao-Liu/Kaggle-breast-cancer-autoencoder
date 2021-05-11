@@ -23,7 +23,9 @@ def str2bool(v):
 parser = argparse.ArgumentParser(description='PyTorch Deep Neural Net Training')
 parser.add_argument('--train', default = False, type=str2bool, 
 			help="specify whether train the model or not (default: False)")
-parser.add_argument('--model_dir', default='/media/bozhao/Data/Shared/Bozhao/NTNU/BreastCancer/Model', 
+parser.add_argument('--train_cluster', default = False, type=str2bool, 
+			help="specify whether train the cluster model or not (default: False)")
+parser.add_argument('--model_dir', default='./Model', 
 			help="Directory containing params.json")
 parser.add_argument('--resume', default = True, type=str2bool, 
 			help='resume from latest checkpoint (default: True)')
@@ -51,7 +53,7 @@ def main():
 		for i, CViter in enumerate(CV_iters):
 			logging.warning('Cross Validation on iteration {}/{}'.format(i, len(CV_iters)))
 			
-			solver = Solver(args, params, CViter)
+			solver = Solver(args, params, CViter, args.train_cluster, not args.train)
 			
 			if args.train:
 				solver.train()
