@@ -24,7 +24,7 @@ class DatasetWrapper:
 			assert cv_iters > 2, 'Cross validation folds must be more than 2 folds'
 			self.cv_iters = cv_iters
 			datapath = './Data'
-			self.dataset = [[os.path.join(os.path.join(os.path.join(datapath, folder), label), image), label] 
+			self.dataset = [[os.path.join(os.path.join(os.path.join(datapath, folder), label), image), int(label)] 
 						for folder in os.listdir(datapath)
 							for label in os.listdir(os.path.join(datapath, folder)) 
 								for image in os.listdir(os.path.join(os.path.join(datapath, folder), label))]
@@ -179,7 +179,7 @@ class imageDataset(Dataset):
 
 		self.transformer = transforms.Compose([
 					transforms.ToTensor(),
-					transforms.Resize([250, 250])])
+					transforms.Resize([50, 50])])
 
 	def __len__(self):
 		# return size of dataset

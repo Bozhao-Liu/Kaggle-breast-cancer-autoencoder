@@ -13,10 +13,10 @@ from datetime import datetime
 
 def Solver(args, params, CViter, train_cluster= False, test = False):
 	if test or train_cluster:
-		from Sovler_Cluster import Sovler
-		return Sovler(args, params, CViter, test)
+		from Solver_Cluster import Solver
+		return Solver(args, params, CViter, test)
 	else:
-		from Sovler_Autoencoder import Sovler
-		return Sovler(args, params, CViter)
+		from Solver_Autoencoder import Solver
+		return Solver(args, params, CViter)
 
 	

@@ -11,7 +11,7 @@ def loadModel(params, netname = 'basecnn', dropout_rate = 0.5, channels = 1):
 	assert os.path.isfile(Netfile), "No python file found for {}, (file name is case sensitive)".format(Netfile)
 	netname = netname.lower()
 	if netname == 'basecnn':
-		return loadBaseCNN()
+		return loadBaseCNN(params.num_LatentFeatures)
 	else:
 		logging.warning("No model with the name {} found, please check your spelling.".format(netname))
 		logging.warning("Net List:")
@@ -36,9 +36,12 @@ def get_model_list(netname = ''):
 	logging.warning("    basedbn")
 	sys.exit()
     
-def loadBaseCNN():
+def loadBaseCNN(num_LatentFeatures):
 	from Model.BaseCNN.BaseCNN import BaseCNN
 	logging.warning("Loading Base Model")
-	return BaseCNN()
+	return BaseCNN(num_LatentFeatures)
 
-
+def loadVAE(num_LatentFeatures):
+	from Model.VAE.VAE import VAE
+	logging.warning("Loading Base Model")
+	return VAE(num_LatentFeatures)

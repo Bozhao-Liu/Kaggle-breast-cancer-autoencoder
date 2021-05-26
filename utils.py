@@ -119,14 +119,13 @@ def save_dict_to_json(d, json_path):
         d = {k: float(v) for k, v in d.items()}
         json.dump(d, f, indent=4)
 
-
-def resume_model(args, model, CViter, itemindex):
-	checkpointfile = os.path.join(args.model_dir, args.network)
-	checkpointfile = os.path.join(checkpointfile, 'Checkpoints' + str(itemindex))
-	checkpointfile = os.path.join(checkpointfile, '{network}_{loss}{gamma}_{cv_iter}.pth.tar'.format(network = args.network, loss = args.loss, gamma = args.gamma, cv_iter = '_'.join(tuple(map(str, CViter)))))
-	assert os.path.isfile(checkpointfile), "=> no checkpoint found at '{}'".format(checkpointfile)
-
-	logging.info("Loading model {}".format(checkpointfile))
-	model.load_state_dict(torch.load(checkpointfile)['state_dict'])
-	return model
+	
+def get_checkpointname(args, n_lf, checkpoint_type, CViter):
+	checkpointpath = os.path.join(args.model_dir, args.network)
+	checkpointpath = os.path.join(checkpointpath, 'Checkpoints' + str(checkpoint_type))
+	checkpointfile = os.path.join(checkpointpath, 
+				'{network}_{LrD}_{cv_iter}_{n_lf}.pth.tar'.format(network = args.network, 
+									     LrD = args.lrDecay,
+									     cv_iter = '_'.join(tuple(map(str, CViter))), n_lf = n_lf))
+	return checkpointpath, checkpointfile									     
 

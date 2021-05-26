@@ -1,4 +1,4 @@
-from numpy import isnan
+from numpy import isnan, inf
 import torch
 import logging
 import gc
@@ -89,7 +89,7 @@ class Solver:
 
 	def train(self):
 		start_epoch = 0
-		best_val_loss = 0	
+		best_val_loss = inf	
 
 		if self.args.resume:
 			logging.warning('Resuming Checkpoint')
@@ -129,34 +129,30 @@ class Solver:
 					'loss': best_val_loss,
 					'optimizer' : self.optimizer.state_dict(),
 					}, '')
-
-			self.__learning_rate_decay__(self.optimizer, self.args.lrDecay)
+			if epoch % 9 == 0 and epoch > 0:
+				print('decay')
+				self.__learning_rate_decay__(self.optimizer, self.args.lrDecay)
 
 		gc.collect()
 		logging.warning('Training finalized\n')
 		return
 		
-	def __save_checkpoint__(self, state, itemindex):
-		checkpointfile = os.path.join(self.args.model_dir, self.args.network)
-		checkpointfile = os.path.join(checkpointfile, 'Checkpoints' + str(itemindex))
-		if not os.path.isdir(checkpointfile):
-			os.mkdir(checkpointfile)
-		checkpointfile = os.path.join(checkpointfile, 
-					'{network}_{LrD}_{cv_iter}.pth.tar'.format(network = self.args.network, 
-										     LrD = self.args.lrDecay,
-										     cv_iter = '_'.join(tuple(map(str, self.CViter)))))
+	def __save_checkpoint__(self, state, checkpoint_type):
+		checkpointpath, checkpointfile = get_checkpointname(	self.args, 
+									self.params.num_LatentFeatures, 
+									checkpoint_type, 
+									self.CViter)
+		if not os.path.isdir(checkpointpath):
+			os.mkdir(checkpointpath)
+			
 		torch.save(state, checkpointfile)
 
 
-	def __resume_checkpoint__(self, itemindex):
-		checkpointfile = os.path.join(self.args.model_dir, self.args.network)
-		checkpointfile = os.path.join(checkpointfile, 'Checkpoints' + str(itemindex))
-		checkpointfile = os.path.join(checkpointfile, 
-					'{network}_{LrD}_{cv_iter}.pth.tar'.format(network = self.args.network, 
-										     LrD = self.args.lrDecay,
-										     cv_iter = '_'.join(tuple(map(str, self.CViter)))))
+	def __resume_checkpoint__(self, checkpoint_type):
+		_, checkpointfile = get_checkpointname(self.args, self.params.num_LatentFeatures, checkpoint_type, self.CViter)
+		
 		if not os.path.isfile(checkpointfile):
-			return 0, 0
+			return 0, inf
 		else:
 			logging.info("Loading checkpoint {}".format(checkpointfile))
 			checkpoint = torch.load(checkpointfile)
@@ -165,7 +161,10 @@ class Solver:
 			self.model.load_state_dict(checkpoint['state_dict'])
 			self.optimizer.load_state_dict(checkpoint['optimizer'])
 			
-		return start_epoch, loss
+			if loss == 0:
+				loss = inf
+				
+			return start_epoch, loss
 
 	def __learning_rate_decay__(self, optimizer, decay_rate):
 		if decay_rate < 1:

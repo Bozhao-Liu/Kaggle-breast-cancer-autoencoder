@@ -4,7 +4,7 @@ import torch
 import logging
 import os
 
-from itertools import permutations 
+from itertools import permutations, product
 from Solver import Solver
 import torch.backends.cudnn as cudnn
 from model_loader import get_model_list
@@ -43,20 +43,29 @@ def main():
 	cudnn.benchmark = True
 	args = parser.parse_args()
 	netlist = get_model_list(args.network)
+	eval_matrix = {}
 	for network in netlist:
 		args.network = network
 		set_logger('./Model', args.network, args.log)
 		params = set_params('./Model', network)
 		
-		CV_iters = list(permutations(list(range(params.CV_iters)), 2))
+		#CV_iters = list(product([0], list(range(1, params.CV_iters))))
+		#CV_iters = list(permutations(list(range(params.CV_iters)), 2))
+		CV_iters = [(0, 1)]
+		eval_matrix[network] = []
 
 		for i, CViter in enumerate(CV_iters):
-			logging.warning('Cross Validation on iteration {}/{}'.format(i, len(CV_iters)))
+			logging.warning('Cross Validation on iteration {}/{}'.format(i+1, len(CV_iters)))
 			
 			solver = Solver(args, params, CViter, args.train_cluster, not args.train)
 			
 			if args.train:
 				solver.train()
+			else:
+				eval_matrix[network].append(solver.validate('test'))
+	
+	if not args.train:			
+		Plot_Eval_SD(netlist, eval_matrix)
 
 
 		

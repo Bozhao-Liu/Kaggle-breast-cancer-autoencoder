@@ -31,3 +31,36 @@ class AverageMeter(object):
 def L2_loss(outputs, labels):
 	return torch.sum(torch.pow(outputs - labels, 2))
 
+
+def plot_AUC_SD(netlist, evalmatices):
+	plt.clf()
+	possitive_ratio = np.loadtxt("./data/possitive_ratio.txt", dtype=float)
+	logging.warning('    Creating standard diviation image for {}'.format('-'.join(netlist)))
+	png_file = 'Crossvalidation_Analysis_{}.PNG'.format('-'.join(netlist))
+
+	if len(netlist) == 0:
+		return
+
+
+	plt.clf()
+	fig, ax = plt.subplots(2)
+	fig.suptitle('Accruacy, F1 for {}'.format('-'.join(netlist)))
+	
+	data = []
+	for net in netlist:
+		data.append(np.array(evalmatices[net]).T[0])
+
+	ax[0].boxplot(data, showfliers=False)
+	ax[0].set_ylabel('Accruacy')
+
+	data = []
+	for net in netlist:
+		data.append(np.array(evalmatices[net]).T[1])
+
+	ax[1].boxplot(data, showfliers=False)
+	ax[1].set_ylabel('F1')
+	ax[1].set_xticklabels(netlist, fontsize=10)
+
+	logging.warning('    Saving standard diviation image for {} \n'.format('-'.join(netlist)))
+	plt.savefig(png_file)
+
