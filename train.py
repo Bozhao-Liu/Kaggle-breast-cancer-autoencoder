@@ -33,8 +33,6 @@ parser.add_argument('--network', type=str, default = 'BaseCNN',
 			help='select network to train on. leave it blank means train on all model')
 parser.add_argument('--log', default='warning', type=str,
 			help='set logging level')
-parser.add_argument('--lrDecay', default=1.0, type=float,
-			help='learning rate decay rate')
 
 
 
@@ -48,7 +46,7 @@ def main():
 		args.network = network
 		set_logger('./Model', args.network, args.log)
 		params = set_params('./Model', network)
-		
+		args.lrDecay = params.lrDecay
 		#CV_iters = list(product([0], list(range(1, params.CV_iters))))
 		#CV_iters = list(permutations(list(range(params.CV_iters)), 2))
 		CV_iters = [(0, 1)]

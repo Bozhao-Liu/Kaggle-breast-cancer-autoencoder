@@ -13,6 +13,7 @@ from datetime import datetime
 
 class Solver:
 	def __init__(self, args, params, CViter):
+		torch.cuda.empty_cache() 
 		self.args = args
 		self.params = params
 		self.CViter = CViter
@@ -28,6 +29,7 @@ class Solver:
 		
 		
 	def __step__(self):
+		torch.cuda.empty_cache() 
 		logging.info("Training")
 		losses = AverageMeter()
 		# switch to train mode
@@ -62,6 +64,7 @@ class Solver:
 	
 	
 	def validate(self):
+		torch.cuda.empty_cache() 
 		logging.info("Validating")
 		losses = AverageMeter()
 		# switch to evaluate mode
@@ -129,8 +132,8 @@ class Solver:
 					'loss': best_val_loss,
 					'optimizer' : self.optimizer.state_dict(),
 					}, '')
-			if epoch % 9 == 0 and epoch > 0:
-				print('decay')
+			if epoch % 7 == 6 and epoch > 0:
+				print('*****************decay**************')
 				self.__learning_rate_decay__(self.optimizer, self.args.lrDecay)
 
 		gc.collect()

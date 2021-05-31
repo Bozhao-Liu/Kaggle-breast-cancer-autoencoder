@@ -1,12 +1,13 @@
 {
     "learning_rate": 1e-3,
-    "batch_size":1000,
-    "epochs": 70,
+    "batch_size":300,
+    "epochs": 40,
     "dropout_rate":0.5, 
     "num_workers": 4,
     "CV_iters": 5,
     "weight_decay": 5e-4,
     "num_LatentFeatures": 256,
     "lrDecay": 0.1,
-    "version": 121
+    "version": 121,
+    "newsize": 250
 }

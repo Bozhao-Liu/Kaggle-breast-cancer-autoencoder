@@ -179,7 +179,7 @@ class imageDataset(Dataset):
 
 		self.transformer = transforms.Compose([
 					transforms.ToTensor(),
-					transforms.Resize([50, 50])])
+					transforms.Resize([params.newsize, params.newsize])])
 
 	def __len__(self):
 		# return size of dataset

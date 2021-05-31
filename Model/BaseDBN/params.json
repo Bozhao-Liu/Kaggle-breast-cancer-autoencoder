@@ -6,7 +6,8 @@
     "num_workers": 4,
     "CV_iters": 5,
     "weight_decay": 5e-4,
-    "num_LatentFeatures": 256,
+    "num_LatentFeatures": 64,
     "lrDecay": 0.1,
-    "version": 121
+    "version": 121,
+    "newsize": 50
 }

@@ -47,6 +47,7 @@ for key, element in encoder_params.items():
 	textfile.write("\n")
 textfile.close()
 
+in_dim = 250
 S = [1,2]
 K = [2,3,4,5]
 P = [1,2]

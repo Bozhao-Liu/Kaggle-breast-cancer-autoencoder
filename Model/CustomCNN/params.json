@@ -8,5 +8,6 @@
     "weight_decay": 5e-4,
     "num_LatentFeatures": 256,
     "lrDecay": 0.1,
-    "version": 121
+    "version": 121,
+    "newsize":50
 }

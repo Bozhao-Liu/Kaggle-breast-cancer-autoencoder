@@ -10,12 +10,13 @@ import model_loader
 from data_loader import fetch_dataloader
 from tqdm import tqdm
 from datetime import datetime
-from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster import KMeans
 from sklearn.metrics import f1_score
 import numpy as np
 
 class Solver:
 	def __init__(self, args, params, CViter, test = False):
+		torch.cuda.empty_cache() 
 		self.args = args
 		self.params = params
 		self.CViter = CViter
@@ -28,7 +29,7 @@ class Solver:
 			self.dataloaders = fetch_dataloader(['train', 'val'], params, CViter) 
 
 		self.loss_fn = L2_loss
-		self.kmean = MiniBatchKMeans(n_clusters = 2, max_iter=1000, batch_size=1000, reassignment_ratio = 1, n_init = 50)
+		self.kmean = KMeans(n_clusters = 2, max_iter=1000, n_init = 50)
 		
 	def __infer_cluster_labels__(self, actual_labels):
 		'''
